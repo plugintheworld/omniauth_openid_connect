@@ -115,11 +115,12 @@ module OmniAuth
       end
 
       def other_phase
-        if logout_path_pattern.match(current_path)
-          discover!
-          return redirect(end_session_uri) if end_session_uri
+        discover!
+        if logout_path_pattern.match(current_path) && end_session_uri
+          redirect end_session_uri
+        else
+          call_app!
         end
-        call_app!
       end
 
       def authorization_code
@@ -177,7 +178,11 @@ module OmniAuth
         client_options.token_endpoint = discover.token_endpoint
         client_options.userinfo_endpoint = discover.userinfo_endpoint
         client_options.jwks_uri = discover.jwks_uri
+<<<<<<< HEAD
         client_options.end_session_endpoint = discover.end_session_endpoint
+=======
+        client_options.end_session_endpoint = discover.try :end_session_endpoint
+>>>>>>> Add logout phase
       end
 
       def user_info
@@ -294,6 +299,22 @@ module OmniAuth
 
       def logout_path_pattern
         %r{\A#{Regexp.quote(request_path)}(/logout)}
+      end
+
+      def encoded_post_logout_redirect_uri
+        return unless options.post_logout_redirect_uri
+        URI.encode_www_form(
+          post_logout_redirect_uri: options.post_logout_redirect_uri
+        )
+      end
+
+      def end_session_endpoint_is_valid?
+        client_options.end_session_endpoint &&
+          client_options.end_session_endpoint =~ URI::DEFAULT_PARSER.make_regexp
+      end
+
+      def logout_path_pattern
+        @logout_path_pattern ||= %r{\A#{Regexp.quote(request_path)}(/logout)}
       end
 
       class CallbackError < StandardError
