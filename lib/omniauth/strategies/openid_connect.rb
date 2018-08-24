@@ -141,10 +141,10 @@ module OmniAuth
           response_type: options.response_type,
           scope: options.scope,
           state: new_state,
-          login_hint: request.params['login_hint'],
-          ui_locales: request.params['ui_locales'],
-          claims_locales: request.params['claims_locales'],
-          prompt: request.params['prompt'],
+          login_hint: params['login_hint'],
+          ui_locales: params['ui_locales'],
+          claims_locales: params['claims_locales'],
+          prompt: options.prompt,
           nonce: (new_nonce if options.send_nonce),
           hd: options.hd,
           organization_domain: request.params['organization_domain']
@@ -312,6 +312,10 @@ module OmniAuth
 
       def logout_path_pattern
         @logout_path_pattern ||= %r{\A#{Regexp.quote(request_path)}(/logout)}
+      end
+
+      def params
+        request.params
       end
 
       class CallbackError < StandardError

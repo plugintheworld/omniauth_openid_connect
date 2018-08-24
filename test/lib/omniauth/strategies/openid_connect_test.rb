@@ -150,6 +150,12 @@ module OmniAuth
         strategy.options.client_options.host = 'example.com'
         request.stubs(:params).returns('name' => 'example', 'logo' => 'example_logo')
 
+      def test_request_phase_with_params
+        expected_redirect = /^https:\/\/example\.com\/authorize\?claims_locales=es&client_id=1234&login_hint=john.doe%40example.com&nonce=\w{32}&response_type=code&scope=openid&state=\w{32}&ui_locales=en$/
+        strategy.options.issuer = 'example.com'
+        strategy.options.client_options.host = 'example.com'
+        request.stubs(:params).returns('login_hint' => 'john.doe@example.com', 'ui_locales' => 'en', 'claims_locales' => 'es')
+
         strategy.expects(:redirect).with(regexp_matches(expected_redirect))
         strategy.request_phase
       end
