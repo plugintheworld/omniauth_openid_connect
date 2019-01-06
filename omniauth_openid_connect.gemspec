@@ -6,10 +6,10 @@ require 'omniauth/openid_connect/version'
 Gem::Specification.new do |spec|
   spec.name          = 'omniauth_openid_connect'
   spec.version       = OmniAuth::OpenIDConnect::VERSION
-  spec.authors       = 'John Bohn'
-  spec.email         = 'jjbohn@gmail.com'
+  spec.authors       = ['John Bohn', 'Ilya Shcherbinin']
+  spec.email         = ['jjbohn@gmail.com', 'm0n9oose@gmail.com']
   spec.summary       = 'OpenID Connect Strategy for OmniAuth'
-  spec.description   = 'OpenID Connect Strategy for OmniAuth'
+  spec.description   = 'OpenID Connect Strategy for OmniAuth.'
   spec.homepage      = 'https://github.com/jjbohn/omniauth-openid-connect'
   spec.license       = 'MIT'
 
@@ -20,10 +20,11 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'omniauth', '~> 1.3'
   spec.add_dependency 'openid_connect', '~> 1.1.6'
+  spec.add_dependency 'openid_connect', '~> 1.1'
   spec.add_dependency 'addressable', '~> 2.5'
   spec.add_development_dependency 'bundler', '~> 2.0.1'
   spec.add_development_dependency 'minitest', '~> 5.1'
-  spec.add_development_dependency 'mocha', '~> 1.7.0'
+  spec.add_development_dependency 'mocha', '~> 1.7'
   spec.add_development_dependency 'guard', '~> 2.14'
   spec.add_development_dependency 'guard-minitest', '~> 2.4'
   spec.add_development_dependency 'guard-bundler', '~> 2.1'
