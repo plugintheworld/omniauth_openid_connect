@@ -4,6 +4,8 @@ Originally was [omniauth-openid-connect](https://github.com/jjbohn/omniauth-open
 
 I've forked this repository and launch as separate gem because maintaining of original was dropped.
 
+[![Build Status](https://travis-ci.org/jobteaser/omniauth_openid_connect.png?branch=master)](https://travis-ci.org/jobteaser/omniauth_openid_connect)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -45,7 +47,7 @@ Configuration details:
   is valid. There are plans to bring in implicit flow and hybrid flow at some
   point, but it hasn't come up yet for me. Those flows aren't best practive for
   server side web apps anyway and are designed more for native/mobile apps.
-  * If you want to pass `state` paramete by yourself. You can set Proc Object.  
+  * If you want to pass `state` paramete by yourself. You can set Proc Object.
   e.g. `state: Proc.new{ SecureRandom.hex(32) }`
   * `nonce` is optional. If don't want to pass "nonce" parameter to provider, You should specify
   `false` to `send_nonce` option. (default true)
@@ -53,8 +55,8 @@ Configuration details:
   `:client_auth_method` option, automatically set `:basic`.
   * Use "OpenID Connect Discovery", You should specify `true` to `discovery` option. (default false)
   * In "OpenID Connect Discovery", generally provider should have Webfinger endpoint.
-  If provider does not have Webfinger endpoint, You can specify "Issuer" to option.  
-  e.g. `issuer: "https://myprovider.com"`  
+  If provider does not have Webfinger endpoint, You can specify "Issuer" to option.
+  e.g. `issuer: "https://myprovider.com"`
   It means to get configuration from "https://myprovider.com/.well-known/openid-configuration".
 
 For the full low down on OpenID Connect, please check out
@@ -62,7 +64,7 @@ For the full low down on OpenID Connect, please check out
 
 ## Contributing
 
-1. Fork it ( http://github.com/jjbohn/omniauth-openid-connect/fork )
+1. Fork it ( http://github.com/jobteaser/omniauth-openid-connect/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
