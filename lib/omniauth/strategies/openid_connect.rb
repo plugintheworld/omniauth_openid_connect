@@ -141,6 +141,7 @@ module OmniAuth
           prompt: request.params['prompt'],
           nonce: (new_nonce if options.send_nonce),
           hd: options.hd,
+          application_domain: request.params['application_domain']
         }
         client.authorization_uri(opts.reject { |k, v| v.nil? })
       end
