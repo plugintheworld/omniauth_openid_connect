@@ -256,7 +256,7 @@ module OmniAuth
 
       def redirect_uri
         return client_options.redirect_uri unless request.params['redirect_uri']
-        "#{ client_options.redirect_uri }?redirect_uri=#{ CGI.escape(request.params['redirect_uri']) }"
+        request.params['redirect_uri']
       end
 
       def encoded_post_logout_redirect_uri
