@@ -97,7 +97,7 @@ module OmniAuth
           return fail!(:missing_code, OmniAuth::OpenIDConnect::MissingCodeError.new(request.params['error']))
         else
           discover!
-          client.redirect_uri = redirect_uri
+          client.redirect_uri = callback_redirect_uri
           client.authorization_code = authorization_code
           access_token
           super
@@ -257,6 +257,11 @@ module OmniAuth
       def redirect_uri
         return client_options.redirect_uri unless request.params['redirect_uri']
         request.params['redirect_uri']
+      end
+
+      def callback_redirect_uri
+        return "#{request.base_url}#{request.path_info}" if request.respond_to?(:base_url) && request.respond_to?(:path_info)
+        client.redirect_uri
       end
 
       def encoded_post_logout_redirect_uri
