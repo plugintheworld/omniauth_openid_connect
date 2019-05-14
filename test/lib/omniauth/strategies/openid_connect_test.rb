@@ -74,7 +74,7 @@ module OmniAuth
         issuer.stubs(:issuer).returns('https://example.com/')
         ::OpenIDConnect::Discovery::Provider.stubs(:discover!).returns(issuer)
 
-        config = stub('OpenIDConnect::Discovery::Provder::Config')
+        config = stub('OpenIDConnect::Discovery::Provider::Config')
         config.stubs(:authorization_endpoint).returns('https://example.com/authorization')
         config.stubs(:token_endpoint).returns('https://example.com/token')
         config.stubs(:userinfo_endpoint).returns('https://example.com/userinfo')
