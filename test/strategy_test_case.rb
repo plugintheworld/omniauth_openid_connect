@@ -26,8 +26,19 @@ class StrategyTestCase < MiniTest::Test
       gender: 'female',
       picture: Faker::Internet.url + '.png',
       phone_number: Faker::PhoneNumber.phone_number,
-      website: Faker::Internet.url,
+      website: Faker::Internet.url
     )
+  end
+
+  def id_token
+      {
+        iss: 'https://server.example.com',
+        sub: 'user_id',
+        aud: 'client_id',
+        nonce: 'nonce',
+        exp: 1313424327,
+        iat: 1313420327
+      }
   end
 
   def request
@@ -46,6 +57,7 @@ class StrategyTestCase < MiniTest::Test
       strategy.options.client_options.secret = @secret
       strategy.stubs(:request).returns(request)
       strategy.stubs(:user_info).returns(user_info)
+      strategy.stubs(:id_token_attributes).returns(id_token)
     end
   end
 end

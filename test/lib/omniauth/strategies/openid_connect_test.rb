@@ -199,6 +199,15 @@ module OmniAuth
 
         id_token = stub('OpenIDConnect::ResponseObject::IdToken')
         id_token.stubs(:verify!).with(issuer: strategy.options.issuer, client_id: @identifier, nonce: nonce).returns(true)
+        id_token.stubs(:raw_attributes).returns(
+          iss: 'https://server.example.com',
+          sub: 'user_id',
+          aud: 'client_id',
+          nonce: 'nonce',
+          exp: 1313424327,
+          iat: 1313420327
+        )
+
         ::OpenIDConnect::ResponseObject::IdToken.stubs(:decode).returns(id_token)
 
         strategy.unstub(:user_info)
@@ -243,6 +252,14 @@ module OmniAuth
 
         id_token = stub('OpenIDConnect::ResponseObject::IdToken')
         id_token.stubs(:verify!).with(issuer: 'https://example.com/', client_id: @identifier, nonce: nonce).returns(true)
+        id_token.stubs(:raw_attributes).returns(
+          iss: 'https://server.example.com',
+          sub: 'user_id',
+          aud: 'client_id',
+          nonce: 'nonce',
+          exp: 1313424327,
+          iat: 1313420327
+        )
         ::OpenIDConnect::ResponseObject::IdToken.stubs(:decode).returns(id_token)
 
         strategy.unstub(:user_info)
@@ -343,7 +360,7 @@ module OmniAuth
       end
 
       def test_extra
-        assert_equal({ raw_info: user_info.as_json }, strategy.extra)
+        assert_equal({ raw_info: user_info.as_json, id_token: id_token }, strategy.extra)
       end
 
       def test_credentials
