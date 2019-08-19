@@ -62,7 +62,9 @@ module OmniAuth
       end
 
       extra do
-        { raw_info: user_info.raw_attributes }
+        { raw_info: user_info.raw_attributes,
+          id_token: id_token_attributes
+        }
       end
 
       credentials do
@@ -184,8 +186,8 @@ module OmniAuth
             scope: (options.scope if options.send_scope_to_token_endpoint),
             client_auth_method: options.client_auth_method
           )
-          _id_token = decode_id_token _access_token.id_token
-          _id_token.verify!(
+          @decoded_id_token = decode_id_token _access_token.id_token
+          @decoded_id_token.verify!(
             issuer: options.issuer,
             client_id: client_options.identifier,
             nonce: stored_nonce
@@ -196,6 +198,10 @@ module OmniAuth
 
       def decode_id_token(id_token)
         ::OpenIDConnect::ResponseObject::IdToken.decode(id_token, public_key)
+      end
+
+      def id_token_attributes
+        @decoded_id_token.raw_attributes
       end
 
       def client_options
