@@ -143,6 +143,17 @@ module OmniAuth
         strategy.request_phase
       end
 
+      def test_request_phase_with_optional_params
+        expected_redirect = /^https:\/\/example\.com\/authorize\?client_id=1234&logo=example_logo&name=example&nonce=\w{32}&response_type=code&scope=openid&state=\w{32}$/
+        strategy.options.issuer = 'example.com'
+        strategy.options.optional_params = [:name, :logo]
+        strategy.options.client_options.host = 'example.com'
+        request.stubs(:params).returns('name' => 'example', 'logo' => 'example_logo')
+
+        strategy.expects(:redirect).with(regexp_matches(expected_redirect))
+        strategy.request_phase
+      end
+
       def test_request_phase_with_discovery
         expected_redirect = /^https:\/\/example\.com\/authorization\?client_id=1234&nonce=\w{32}&response_type=code&scope=openid&state=\w{32}$/
         strategy.options.client_options.host = 'example.com'

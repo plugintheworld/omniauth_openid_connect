@@ -44,6 +44,7 @@ module OmniAuth
       option :send_scope_to_token_endpoint, true
       option :client_auth_method
       option :post_logout_redirect_uri
+      option :optional_params, []
 
       uid { user_info.sub }
 
@@ -146,6 +147,9 @@ module OmniAuth
           hd: options.hd,
           organization_domain: request.params['organization_domain']
         }
+        options.optional_params.each do |key|
+          opts[key] = request.params[key.to_s] unless options.optional_params.empty?
+        end
         client.authorization_uri(opts.reject { |k, v| v.nil? })
       end
 
