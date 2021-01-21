@@ -21,7 +21,8 @@ module OmniAuth
         token_endpoint: '/token',
         userinfo_endpoint: '/userinfo',
         jwks_uri: '/jwk',
-        end_session_endpoint: nil
+        end_session_endpoint: nil,
+        post_logout_redirect_uri: nil
       }
       option :issuer
       option :discovery, false
@@ -43,6 +44,7 @@ module OmniAuth
       option :send_scope_to_token_endpoint, true
       option :client_auth_method
       option :post_logout_redirect_uri
+      option :optional_params, []
 
       uid { user_info.sub }
 
@@ -61,7 +63,9 @@ module OmniAuth
       end
 
       extra do
-        { raw_info: user_info.raw_attributes }
+        { raw_info: user_info.raw_attributes,
+          id_token: id_token_attributes
+        }
       end
 
       credentials do
@@ -97,7 +101,7 @@ module OmniAuth
           return fail!(:missing_code, OmniAuth::OpenIDConnect::MissingCodeError.new(request.params['error']))
         else
           discover!
-          client.redirect_uri = redirect_uri
+          client.redirect_uri = callback_redirect_uri
           client.authorization_code = authorization_code
           access_token
           super
@@ -141,7 +145,11 @@ module OmniAuth
           prompt: request.params['prompt'],
           nonce: (new_nonce if options.send_nonce),
           hd: options.hd,
+          organization_domain: request.params['organization_domain']
         }
+        options.optional_params.each do |key|
+          opts[key] = request.params[key.to_s] unless options.optional_params.empty?
+        end
         client.authorization_uri(opts.reject { |k, v| v.nil? })
       end
 
@@ -182,8 +190,8 @@ module OmniAuth
             scope: (options.scope if options.send_scope_to_token_endpoint),
             client_auth_method: options.client_auth_method
           )
-          _id_token = decode_id_token _access_token.id_token
-          _id_token.verify!(
+          @decoded_id_token = decode_id_token _access_token.id_token
+          @decoded_id_token.verify!(
             issuer: options.issuer,
             client_id: client_options.identifier,
             nonce: stored_nonce
@@ -194,6 +202,10 @@ module OmniAuth
 
       def decode_id_token(id_token)
         ::OpenIDConnect::ResponseObject::IdToken.decode(id_token, public_key)
+      end
+
+      def id_token_attributes
+        @decoded_id_token.raw_attributes
       end
 
       def client_options
@@ -255,14 +267,24 @@ module OmniAuth
 
       def redirect_uri
         return client_options.redirect_uri unless request.params['redirect_uri']
-        "#{ client_options.redirect_uri }?redirect_uri=#{ CGI.escape(request.params['redirect_uri']) }"
+        request.params['redirect_uri']
+      end
+
+      def callback_redirect_uri
+        return "#{request.base_url}#{request.path_info}" if request.respond_to?(:base_url) && request.respond_to?(:path_info)
+        client.redirect_uri
       end
 
       def encoded_post_logout_redirect_uri
-        return unless options.post_logout_redirect_uri
+        return unless post_logout_redirect_uri
         URI.encode_www_form(
-          post_logout_redirect_uri: options.post_logout_redirect_uri
+          post_logout_redirect_uri: post_logout_redirect_uri
         )
+      end
+
+      def post_logout_redirect_uri
+        return options.post_logout_redirect_uri unless request.params['post_logout_redirect_uri']
+        request.params['post_logout_redirect_uri']
       end
 
       def end_session_endpoint_is_valid?
