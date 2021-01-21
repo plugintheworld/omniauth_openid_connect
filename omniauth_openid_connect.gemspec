@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'omniauth', '~> 1.3'
   spec.add_dependency 'openid_connect', '~> 1.1.6'
-  spec.add_dependency 'openid_connect', '~> 1.1'
   spec.add_dependency 'addressable', '~> 2.5'
   spec.add_development_dependency 'bundler', '~> 2.0.1'
   spec.add_development_dependency 'minitest', '~> 5.1'

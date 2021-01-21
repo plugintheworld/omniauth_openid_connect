@@ -64,7 +64,11 @@ For the full low down on OpenID Connect, please check out
 
 ## Contributing
 
+<<<<<<< HEAD
 1. Fork it ( http://github.com/jobteaser/omniauth-openid-connect/fork )
+=======
+1. Fork it ( http://github.com/m0n9oose/omniauth-openid-connect/fork )
+>>>>>>> 45987d86764a5bd6983472d823c4f6cbc878dbaf
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

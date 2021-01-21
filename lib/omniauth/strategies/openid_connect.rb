@@ -121,11 +121,11 @@ module OmniAuth
       end
 
       def other_phase
-        if logout_path_pattern.match?(current_path)
-          options.issuer = issuer if options.issuer.nil? || options.issuer.empty?
+        if logout_path_pattern.match(current_path)
           discover!
           return redirect(end_session_uri) if end_session_uri
         end
+        call_app!
       end
 
       def authorization_code
@@ -272,7 +272,6 @@ module OmniAuth
       end
 
       def redirect_uri
-<<<<<<< HEAD
         return client_options.redirect_uri unless request.params['redirect_uri']
         request.params['redirect_uri']
       end
@@ -301,6 +300,8 @@ module OmniAuth
 
       def logout_path_pattern
         %r{\A#{Regexp.quote(request_path)}(/logout)}
+        return client_options.redirect_uri unless params['redirect_uri']
+        "#{ client_options.redirect_uri }?redirect_uri=#{ CGI.escape(params['redirect_uri']) }"
       end
 
       def encoded_post_logout_redirect_uri
@@ -317,14 +318,6 @@ module OmniAuth
 
       def logout_path_pattern
         @logout_path_pattern ||= %r{\A#{Regexp.quote(request_path)}(/logout)}
-      end
-
-      def params
-        request.params
-=======
-        return client_options.redirect_uri unless params['redirect_uri']
-        "#{ client_options.redirect_uri }?redirect_uri=#{ CGI.escape(params['redirect_uri']) }"
->>>>>>> forward `params` call to `request.params`
       end
 
       class CallbackError < StandardError
